@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,12 +18,34 @@ builder.Host.UseSerilog(
 
 builder.Services.AddControllers();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Register Swagger
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "My Search API",
+            Version = "v1",
+            Description = "Search API with Core 9",
+        }
+    );
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) { }
+
+// Enable Swagger & Swagger UI
+if (app.Environment.IsDevelopment()) // Show only in Development mode
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Search API v1");
+    });
+}
+
 app.UseSerilogRequestLogging(); // Logs HTTP requests
 
 app.UseHttpsRedirection();
