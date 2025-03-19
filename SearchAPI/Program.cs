@@ -24,6 +24,10 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
+
+// Middleware for error handling
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 // Enable Swagger & Swagger UI
 if (app.Environment.IsDevelopment()) // Show only in Development mode
 {
