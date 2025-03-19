@@ -1,4 +1,3 @@
-using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,18 +18,7 @@ builder.Host.UseSerilog(
 builder.Services.AddControllers();
 
 // Register Swagger
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc(
-        "v1",
-        new OpenApiInfo
-        {
-            Title = "My Search API",
-            Version = "v1",
-            Description = "Search API with Core 9",
-        }
-    );
-});
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -40,10 +28,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) // Show only in Development mode
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Search API v1");
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseSerilogRequestLogging(); // Logs HTTP requests
