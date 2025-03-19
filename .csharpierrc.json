@@ -1,0 +1,11 @@
+{
+  "indent": 2,
+  "useTabs": false,
+  "maxLineLength": 80,
+  "tabWidth": 4,
+  "braceStyle": "1tbs",
+  "spacesBeforeConditional": true,
+  "spacesAroundLambdaArrow": "before",
+  "spacesInsideParentheses": false,
+  "spacesInsideSquareBrackets": false
+}
