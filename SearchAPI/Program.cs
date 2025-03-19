@@ -1,3 +1,4 @@
+using SearchAPI.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,8 @@ var app = builder.Build();
 
 // Middleware for error handling
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
+app.UseMiddleware<RateLimitingMiddleware>();
 
 // Enable Swagger & Swagger UI
 if (app.Environment.IsDevelopment()) // Show only in Development mode
