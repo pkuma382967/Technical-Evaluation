@@ -46,7 +46,6 @@ namespace SearchAPI.Controllers
                 return Unauthorized(new { message = "Invalid user." });
             }
 
-            // Generate cache key based on search parameters
             var cacheKey = $"search_{query}_{filter}_{sortBy}_{pageNumber}_{pageSize}";
 
             if (
@@ -60,7 +59,6 @@ namespace SearchAPI.Controllers
 
                 var products = _context.Products.AsQueryable();
 
-                // Search query
                 if (!string.IsNullOrWhiteSpace(query))
                 {
                     products = products.Where(p =>
@@ -68,23 +66,18 @@ namespace SearchAPI.Controllers
                     );
                 }
 
-                // Apply filters
                 products = ProductFilterHelper.ApplyFilters(products, filter);
 
-                // Apply sorting
                 products = ProductSortHelper.ApplySort(products, sortBy);
 
-                // Get total count before pagination
                 int totalItems = await products.CountAsync();
                 int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-                // Apply pagination
                 var pagedData = await products
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
 
-                // Store results in cache (expires in 5 minutes)
                 var cacheOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(
                     TimeSpan.FromMinutes(_cacheExpirationMinutes)
                 );

@@ -12,24 +12,21 @@ namespace SearchAPI.Data
         public DbSet<User> Users { get; set; }
         public DbSet<SearchHistory> SearchHistories { get; set; }
 
-        // seed some data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Seed Admin User
             var adminUser = new User
             {
-                Id = 1, // Ensure the Id is unique and manually assigned.
+                Id = 1,
                 Username = "admin",
-                PasswordHash = User.HashPassword("password123"), // Hash the password before saving
+                PasswordHash = User.HashPassword("password123"),
             };
 
             modelBuilder.Entity<User>().HasData(adminUser);
 
             modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(18,2)");
 
-            // Seeding data for Products
             modelBuilder
                 .Entity<Product>()
                 .HasData(

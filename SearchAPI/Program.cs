@@ -1,5 +1,4 @@
 using System.Text;
-using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,32 +11,25 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Serilog
 builder.Host.UseSerilog(
     (context, services, loggerConfiguration) =>
     {
-        loggerConfiguration
-            .ReadFrom.Configuration(context.Configuration) // Read from appsettings.json
-            .WriteTo.Console(); // Enable logging in the console
+        loggerConfiguration.ReadFrom.Configuration(context.Configuration).WriteTo.Console();
     }
 );
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SearchAppDBConnection"))
 );
+
 builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
 builder.Services.AddMemoryCache();
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 
-// Register Swagger
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Search API", Version = "v1" });
-
-    // Add JWT Authentication to Swagger
     options.AddSecurityDefinition(
         "Bearer",
         new OpenApiSecurityScheme
@@ -76,10 +68,6 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// authentication
-// Add authentication
-
-
 builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(
@@ -103,31 +91,24 @@ builder
     );
 
 builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-
-// Middleware for error handling
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestResponseLoggingMiddleware>();
-
 app.UseMiddleware<RateLimitingMiddleware>();
 
-// Enable Swagger & Swagger UI
-if (app.Environment.IsDevelopment()) // Show only in Development mode
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseSerilogRequestLogging(); // Logs HTTP requests
-
+app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

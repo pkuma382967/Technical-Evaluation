@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SearchAPI.Models.Domain;
+﻿using SearchAPI.Models.Domain;
 
 public static class ProductSortHelper
 {

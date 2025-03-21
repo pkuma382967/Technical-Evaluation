@@ -1,13 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Serilog;
-
-namespace SearchAPI.Middleware
+﻿namespace SearchAPI.Middleware
 {
     public class RequestResponseLoggingMiddleware
     {
@@ -25,7 +16,6 @@ namespace SearchAPI.Middleware
             _next = next;
             _logger = logger;
 
-            // Read settings from appsettings.json
             _logRequestBody = config.GetValue<bool>("Serilog:LogRequestBody");
             _logResponseBody = config.GetValue<bool>("Serilog:LogResponseBody");
         }
@@ -36,7 +26,6 @@ namespace SearchAPI.Middleware
             var userInfo = GetUserInfo(context);
             var headers = GetHeaders(context);
 
-            // Log request details
             _logger.LogInformation(
                 "Request: {RequestInfo} | User: {UserInfo} | Headers: {Headers}",
                 requestInfo,
@@ -52,7 +41,6 @@ namespace SearchAPI.Middleware
 
             var responseInfo = await FormatResponse(context.Response);
 
-            // Log response based on status
             if (context.Response.StatusCode >= 400)
             {
                 _logger.LogError("Response: {ResponseInfo}", responseInfo);
