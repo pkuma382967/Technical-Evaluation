@@ -56,30 +56,7 @@ namespace SearchAPI.Controllers
                 )
             )
             {
-                // Build full query string to store
-                var requestUrl = HttpContext.Request.Path + HttpContext.Request.QueryString;
-                var searchKey = requestUrl.ToString().ToLower(); // normalize for uniqueness
-
-                // Save unique search history
-                if (!string.IsNullOrWhiteSpace(requestUrl))
-                {
-                    var today = DateTime.UtcNow.Date;
-                    bool alreadyExists = await _context.SearchHistories.AnyAsync(h =>
-                        h.Query == searchKey && h.SearchDate.Date == today
-                    );
-
-                    if (!alreadyExists)
-                    {
-                        var history = new SearchHistory
-                        {
-                            Query = searchKey,
-                            SearchDate = DateTime.UtcNow,
-                        };
-
-                        await _context.SearchHistories.AddAsync(history);
-                        await _context.SaveChangesAsync();
-                    }
-                }
+                await SearchHistoryHelper.SaveSearchHistoryIfNeeded(_context, HttpContext.Request);
 
                 var products = _context.Products.AsQueryable();
 
