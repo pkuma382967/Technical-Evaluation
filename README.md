@@ -6,7 +6,7 @@
 Open `appsettings.json` and update the connection string:
 ```json
 "ConnectionStrings": {
-  "SearchAppDBConnection": "Server=(localdb)\\MSSQLLocalDB;Database=SearchAPI;Trusted_Connection=True;TrustServerCertificate=True;"
+  "SearchAppDBConnection": "Server={{serverAddress}};Database=SearchAPI;Trusted_Connection=True;TrustServerCertificate=True;"
 }
 ```
 
@@ -17,8 +17,9 @@ Add-Migration InitialSetup
 Update-Database
 ```
 > 💡 This will create the database with the following tables:
-> - `Product`
-> - `User` (with a default admin user)
+> - `Products`
+> - `SearchHistories`
+> - `Users` (with a default admin user)
 
 ---
 
@@ -128,6 +129,12 @@ The API supports **in-memory caching** with expiration controlled via:
 ```
 > 🕒 This improves performance by reducing unnecessary DB hits.
 
+### Testing API
+
+For testing API use 
+```
+SearchAPI.http
+```
 
 
 
