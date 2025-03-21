@@ -17,13 +17,12 @@ builder.Host.UseSerilog(
     {
         loggerConfiguration
             .ReadFrom.Configuration(context.Configuration) // Read from appsettings.json
-            .Enrich.WithProperty("ApplicationName", "Search Api") // Add custom properties
             .WriteTo.Console(); // Enable logging in the console
     }
 );
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SearchAppDBConnection"))
 );
 
 // Add services to the container.
@@ -110,7 +109,7 @@ var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
-//app.UseMiddleware<RateLimitingMiddleware>();
+app.UseMiddleware<RateLimitingMiddleware>();
 
 // Enable Swagger & Swagger UI
 if (app.Environment.IsDevelopment()) // Show only in Development mode
