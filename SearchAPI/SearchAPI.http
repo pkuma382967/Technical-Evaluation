@@ -1,6 +1,52 @@
 @SearchAPI_HostAddress = http://localhost:5044
+@SearchAPIURL = https://localhost:7106
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmJmIjoxNzQyNTM2ODY4LCJleHAiOjE3NDI1NDA0NjgsImlhdCI6MTc0MjUzNjg2OCwiaXNzIjoiU2VhcmNoQVBJIiwiYXVkIjoiU2VhcmNoQVBJVXNlcnMifQ.2gOdyjbnjWV8gsu0ZSnEfG41gCswe4JE2wZUKqcvPpc
 
-GET {{SearchAPI_HostAddress}}/weatherforecast/
+
+
+
+###
+
+POST {{SearchAPI_HostAddress}}/api/auth/login
 Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+
+###
+
+
+### Search API Request
+
+@query = lap
+@filter = price:0-99999
+@sortBy = Id
+@pageNumber = 1
+@pageSize = 10
+
+
+GET {{SearchAPIURL}}/api/Search?query={{query}}&filter={{filter}}&sortBy={{sortBy}}&pageNumber={{pageNumber}}&pageSize={{pageSize}}
+Accept: */*
+Authorization: Bearer {{Token}}
+
+###
+
+
+### Search API Request
+
+@query = a
+@filter = price:0-99999
+@sortBy = Id
+@pageNumber = 1
+@pageSize = 10
+
+
+GET {{SearchAPIURL}}/api/Search?query={{query}}&filter={{filter}}&sortBy={{sortBy}}&pageNumber={{pageNumber}}&pageSize={{pageSize}}
+Accept: */*
+Authorization: Bearer {{Token}}
 
 ###
