@@ -56,6 +56,8 @@ namespace SearchAPI.Controllers
                 )
             )
             {
+                await SearchHistoryHelper.SaveSearchHistoryIfNeeded(_context, HttpContext.Request);
+
                 var products = _context.Products.AsQueryable();
 
                 // Search query
