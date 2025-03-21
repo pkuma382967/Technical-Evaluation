@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SearchAPI.Data;
 using SearchAPI.Middleware;
+using SearchAPI.Models;
 using SearchAPI.Services;
 using Serilog;
 
@@ -24,6 +25,8 @@ builder.Host.UseSerilog(
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SearchAppDBConnection"))
 );
+builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
+builder.Services.AddMemoryCache();
 
 // Add services to the container.
 
