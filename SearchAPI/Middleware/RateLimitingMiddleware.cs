@@ -1,6 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace SearchAPI.Middleware
 {
@@ -27,11 +25,9 @@ namespace SearchAPI.Middleware
             _config = config;
             _logger = logger;
 
-            // Load settings from config
             _requestLimit = _config.GetValue<int>("RateLimiting:RequestLimit", 5);
             _timeWindowSeconds = _config.GetValue<int>("RateLimiting:TimeWindowSeconds", 10);
 
-            // Load blacklisted IPs
             var blacklistedIPs =
                 _config.GetSection("BlacklistedIPs").Get<List<string>>() ?? new List<string>();
             _blacklistedIPs = new HashSet<string>(blacklistedIPs);
@@ -41,7 +37,6 @@ namespace SearchAPI.Middleware
         {
             var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 
-            // Bypass rate limiting for Swagger requests
             if (
                 context.Request.Path.StartsWithSegments("/swagger")
                 || context.Request.Path.StartsWithSegments("/swagger/v1/swagger.json")
@@ -51,7 +46,6 @@ namespace SearchAPI.Middleware
                 return;
             }
 
-            // Check if IP is blacklisted
             if (_blacklistedIPs.Contains(ip))
             {
                 _logger.LogWarning($"Blocked request from blacklisted IP: {ip}");
@@ -62,7 +56,6 @@ namespace SearchAPI.Middleware
                 return;
             }
 
-            // Handle rate limiting
             bool isRateLimited = false;
             lock (_requestLogs)
             {
@@ -73,12 +66,10 @@ namespace SearchAPI.Middleware
 
                 var requestTimes = _requestLogs[ip];
 
-                // Remove old requests outside the time window
                 requestTimes.RemoveAll(time =>
                     (DateTime.UtcNow - time).TotalSeconds > _timeWindowSeconds
                 );
 
-                // Check if request limit is exceeded
                 if (requestTimes.Count >= _requestLimit)
                 {
                     isRateLimited = true;
