@@ -1,7 +1,6 @@
 @SearchAPI_HostAddress = http://localhost:5044
 @SearchAPIURL = https://localhost:7106
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmJmIjoxNzQyNTM2ODY4LCJleHAiOjE3NDI1NDA0NjgsImlhdCI6MTc0MjUzNjg2OCwiaXNzIjoiU2VhcmNoQVBJIiwiYXVkIjoiU2VhcmNoQVBJVXNlcnMifQ.2gOdyjbnjWV8gsu0ZSnEfG41gCswe4JE2wZUKqcvPpc
-
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmJmIjoxNzQyNTM5ODU2LCJleHAiOjE3NDI1NDM0NTYsImlhdCI6MTc0MjUzOTg1NiwiaXNzIjoiU2VhcmNoQVBJIiwiYXVkIjoiU2VhcmNoQVBJVXNlcnMifQ.0JfbREdNl7MDUROmORaX3NLZvpWqycxfiWqIA-hyzPw
 
 
 
@@ -47,6 +46,97 @@ Authorization: Bearer {{Token}}
 
 GET {{SearchAPIURL}}/api/Search?query={{query}}&filter={{filter}}&sortBy={{sortBy}}&pageNumber={{pageNumber}}&pageSize={{pageSize}}
 Accept: */*
+Authorization: Bearer {{Token}}
+
+###
+
+### 1. Basic keyword search
+GET {{SearchAPIURL}}/api/search?query=laptop
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 2. Filter by price range
+GET {{SearchAPIURL}}/api/search?filter=price:200-800
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 3. Filter by date range
+GET {{SearchAPIURL}}/api/search?filter=date:2024-01-01-2024-12-31
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 4. Filter by popularity range
+GET {{SearchAPIURL}}/api/search?filter=popularity:50-150
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 5. Filter by relevance range
+GET {{SearchAPIURL}}/api/search?filter=relevance:0.6-1.0
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 6. Combined filters (price + popularity)
+GET {{SearchAPIURL}}/api/search?filter=price:300-1000,popularity:60-130
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 7. Combined filters + keyword search
+GET {{SearchAPIURL}}/api/search?query=gaming&filter=price:200-9900,popularity:0-990
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 8a. Sort by price
+GET {{SearchAPIURL}}/api/search?sortBy=price
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 8b. Sort by date
+GET {{SearchAPIURL}}/api/search?sortBy=date
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 8c. Sort by popularity
+GET {{SearchAPIURL}}/api/search?sortBy=popularity
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 8d. Sort by relevance
+GET {{SearchAPIURL}}/api/search?sortBy=relevance
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 9. Pagination (page 2, 5 items per page)
+GET {{SearchAPIURL}}/api/search?pageNumber=2&pageSize=5
+Accept: application/json
+Authorization: Bearer {{Token}}
+
+###
+
+### 10. Full-featured request: query + filters + sort + pagination
+GET {{SearchAPIURL}}/api/search?query=console&filter=price:300-600,date:2024-01-01-2024-12-31,relevance:0.7-1.0&sortBy=relevance&pageNumber=1&pageSize=3
+Accept: application/json
 Authorization: Bearer {{Token}}
 
 ###
